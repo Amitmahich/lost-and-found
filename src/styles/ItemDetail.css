@@ -1,0 +1,206 @@
+.item-detail-container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 20px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.back-button {
+  margin-bottom: 20px;
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.item-detail-content {
+  display: flex;
+  gap: 40px;
+  align-items: stretch; /* 🔥 Make both sides same height */
+  flex-wrap: wrap;
+  min-height: 400px;
+}
+
+/* LEFT SIDE - Image */
+.image-section {
+  flex: 1;
+  min-width: 40%;
+  background: #f9f9f9;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  /* background: white; */
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.image-section img {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* RIGHT SIDE - Details */
+.info-section {
+  flex: 1;
+  min-width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.info-box {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+.info-box h2 {
+  font-size: 1.4rem;
+  margin-bottom: 18px;
+  color: #333;
+}
+
+.info-box p {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: #555;
+}
+
+.info-box strong {
+  font-weight: 600;
+  color: #000;
+}
+
+/* Buttons */
+.button-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.button-row button {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+.delete-btn {
+  background-color: #e53935;
+  color: white;
+}
+.delete-btn:hover {
+  background-color: #c62828;
+  transform: scale(1.03);
+}
+
+.edit-btn {
+  background-color: #1e88e5;
+  color: white;
+}
+.edit-btn:hover {
+  background-color: #1565c0;
+  transform: scale(1.03);
+}
+
+.found-btn {
+  background-color: #43a047;
+  color: white;
+}
+.found-btn:hover {
+  background-color: #2e7d32;
+  transform: scale(1.03);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .item-detail-content {
+    flex-direction: column;
+  }
+
+  .button-row {
+    flex-direction: column;
+  }
+
+  .info-box {
+    height: auto;
+  }
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h3 {
+  margin-bottom: 15px;
+}
+
+.modal-content p {
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.modal-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  background: #ddd;
+}
+
+.modal-actions .gradient-green {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white;
+}
+
+.modal-actions .gradient-blue {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+}

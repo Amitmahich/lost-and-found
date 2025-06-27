@@ -1,0 +1,41 @@
+.my-listings-container {
+  padding: 20px;
+  animation: fadeIn 0.5s ease;
+}
+
+.my-listings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.listing-card {
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  background: #ffffff10;
+  transition: all 0.3s ease;
+}
+
+.listing-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+}
+
+.listing-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.listing-info {
+  margin-top: 10px;
+}
+
+.short-desc {
+  font-size: 0.9rem;
+  color: #ccc;
+}

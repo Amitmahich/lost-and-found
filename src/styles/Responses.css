@@ -1,0 +1,84 @@
+.responses-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.responses-container h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #222;
+  border-left: 5px solid #007bff;
+  padding-left: 12px;
+}
+
+.response-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.response-card {
+  background: #ffffffdd;
+  padding: 1.2rem 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease-in-out;
+  border-left: 6px solid #007bff;
+}
+
+.response-card:hover {
+  transform: translateY(-5px);
+}
+
+.response-card h3 {
+  font-size: 1.2rem;
+  color: #007bff;
+  margin-bottom: 0.6rem;
+}
+
+.response-card p {
+  margin: 0.4rem 0;
+  font-size: 0.95rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.badge-approved {
+  background-color: #28a745;
+}
+
+.badge-pending {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.show-number-section {
+  margin-top: 0.8rem;
+  padding: 0.5rem;
+  background: #e7f5ff;
+  border-left: 4px solid #007bff;
+  font-weight: 500;
+  border-radius: 0.5rem;
+}
+
+.loader {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem;
+  color: #555;
+}
+
+/* Optional: Glass style class */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+}

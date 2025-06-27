@@ -1,0 +1,112 @@
+.dashboard-content {
+  padding: 20px;
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.item-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  text-decoration: none; /* 🔄 removes underline */
+  color: inherit; /* 🔄 keeps text color as normal */
+  display: block; /* 📦 makes link behave like block */
+  cursor: pointer;
+}
+
+.item-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease-in-out;
+}
+
+.item-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.item-details {
+  padding: 15px;
+}
+
+.item-details h3 {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.item-details p {
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.question {
+  font-style: italic;
+  color: #555;
+}
+.loading-text,
+.empty-text {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #666;
+  margin: 20px 0;
+}
+
+.loading-text {
+  font-style: italic;
+}
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0rem auto 1.5rem;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(8px);
+  max-width: 900px;
+}
+
+.search-input,
+.filter-select {
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: none;
+  font-size: 1rem;
+  background-color: #f9fafb;
+  color: #111;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  min-width: 250px;
+  max-width: 90vw;
+}
+
+.search-input:focus,
+.filter-select:focus {
+  outline: none;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+@media (max-width: 500px) {
+  .search-input,
+  .filter-select {
+    width: 100%;
+  }
+
+  .filter-controls {
+    padding: 0.8rem;
+    gap: 0.75rem;
+  }
+}
+

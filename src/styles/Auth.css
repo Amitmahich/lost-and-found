@@ -1,0 +1,156 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* Prevent side scroll */
+}
+
+/* 🌌 Full background with gradient */
+.auth-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #2d2353, #46377b);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* 📦 Centered Box */
+.auth-box {
+  background: white;
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 15px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeIn 0.4s ease-in-out;
+  box-sizing: border-box; /* ✅ Very important */
+}
+
+/* 🧠 Headings and Text */
+.auth-box h2 {
+  margin-bottom: 10px;
+  color: #2d2353;
+}
+
+.auth-box p {
+  margin-bottom: 25px;
+  color: #666;
+  font-size: 14px;
+}
+
+/* 🧾 Form Inputs */
+.auth-box input,
+.auth-box textarea {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.auth-box input:focus,
+.auth-box textarea:focus {
+  outline: none;
+  border-color: #2d2353;
+  box-shadow: 0 0 5px rgba(45, 35, 83, 0.3);
+}
+
+/* 🟪 Button Styling */
+.auth-box button {
+  width: 100%;
+  padding: 12px;
+  background-color: #2d2353;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.auth-box button:hover {
+  background-color: #1f1a3b;
+}
+
+/* 🔗 Auth Navigation Links */
+.auth-links {
+  text-align: right;
+  margin-bottom: 15px;
+}
+
+.auth-links a {
+  color: #2d2353!important;
+  font-size: 13px ;
+  text-decoration: none;
+  background: transparent !important; /* background hatane ke liye */
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+  background: transparent !important; /* background hatane ke liye */
+  color: #1f1a3b !important;
+}
+
+/* 🔄 Switch Link between Sign In/Up */
+.switch-auth {
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.switch-auth a {
+  color: #2d2353;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.switch-auth a:hover {
+  text-decoration: underline;
+}
+
+/* 🎬 Animations */
+@keyframes fadeIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 480px) {
+  .auth-box {
+    padding: 30px 20px;
+    margin: 0 10px;
+  }
+
+  .auth-box input {
+    font-size: 13px;
+  }
+
+  .auth-box h2 {
+    font-size: 22px;
+  }
+
+  .auth-box p,
+  .switch-auth {
+    font-size: 13px;
+  }
+  .auth-links {
+    text-align: center;
+  }
+
+  .auth-links a {
+    font-size: 12px;
+  }
+}
