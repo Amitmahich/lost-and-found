@@ -5,6 +5,7 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -24,6 +25,7 @@ export default function ItemDetail() {
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [responseDocId, setResponseDocId] = useState(null);
   const [responseStatus, setResponseStatus] = useState(null);
+  const [hasResponded, setHasResponded] = useState(false);
 
   useEffect(() => {
     const fetchItem = async () => {
@@ -37,11 +39,29 @@ export default function ItemDetail() {
           toast.error("Item not found ❌");
           navigate("/dashboard");
         }
+
+        await checkIfUserResponded();
       } catch (error) {
         console.error(error);
         toast.error("Error loading item 😢");
       } finally {
         setLoading(false);
+      }
+    };
+
+    const checkIfUserResponded = async () => {
+      const responseRef = collection(db, "responses");
+      const snapshot = await getDocs(responseRef);
+      const userResponse = snapshot.docs.find(
+        (doc) =>
+          doc.data().itemId === id &&
+          doc.data().responderId === auth.currentUser?.uid
+      );
+
+      if (userResponse) {
+        setHasResponded(true);
+        setResponseDocId(userResponse.id);
+        setResponseStatus(userResponse.data().status);
       }
     };
 
@@ -90,6 +110,7 @@ export default function ItemDetail() {
 
       setResponseDocId(docRef.id);
       setResponseStatus("Pending");
+      setHasResponded(true);
 
       toast.success("Answer submitted successfully ✅");
       setShowAnswerModal(false);
@@ -117,6 +138,14 @@ export default function ItemDetail() {
 
   const isOwner = auth.currentUser?.uid === item.userId;
   const createdAt = item.createdAt?.toDate?.().toLocaleString() || "N/A";
+  const buttonText =
+    item.itemType === "Found it"
+      ? "✅ I Lost This Item"
+      : "✅ I Found This Item";
+  const modalQuestion =
+    item.itemType === "Found it"
+      ? "Are you sure you lost this item?"
+      : "Are you sure you found this item?";
 
   return (
     <div className="item-detail-container">
@@ -152,12 +181,6 @@ export default function ItemDetail() {
                 >
                   🗑️ Delete Item
                 </button>
-                <button
-                  className="edit-btn gradient-blue"
-                  onClick={() => navigate(`/dashboard/edit/${id}`)}
-                >
-                  ✏️ Edit Item
-                </button>
                 {responseDocId && responseStatus === "Pending" && (
                   <button
                     className="approve-btn gradient-green"
@@ -175,23 +198,26 @@ export default function ItemDetail() {
                   </button>
                 )}
               </>
+            ) : hasResponded ? (
+              <p className="response-info">
+                Sorry, you have already submitted your response.
+              </p>
             ) : (
               <button
                 className="found-btn gradient-green"
                 onClick={handleFoundClick}
               >
-                ✅ Found Item
+                {buttonText}
               </button>
             )}
           </div>
         </div>
       </div>
 
-      {/* Confirmation Modal */}
       {showConfirmModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h3>Are you sure you found the item?</h3>
+            <h3>{modalQuestion}</h3>
             <div className="modal-actions">
               <button onClick={() => setShowConfirmModal(false)}>No</button>
               <button className="gradient-green" onClick={handleConfirmYes}>
@@ -202,12 +228,11 @@ export default function ItemDetail() {
         </div>
       )}
 
-      {/* Answer Modal */}
       {showAnswerModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Your Question:</h3>
-            <p>{item.question}</p>
+            <p>{item.question} ?</p>
             <input
               type="text"
               placeholder="Enter your answer here"
@@ -224,7 +249,6 @@ export default function ItemDetail() {
         </div>
       )}
 
-      {/* Phone Modal */}
       {showPhoneModal && (
         <div className="modal-overlay">
           <div className="modal-content">

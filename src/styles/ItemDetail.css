@@ -204,3 +204,11 @@
   background: linear-gradient(135deg, #3498db, #2980b9);
   color: white;
 }
+.response-info {
+  color: #333;
+  font-weight: 600;
+  background: #f3f3f3;
+  padding: 10px 15px;
+  border-radius: 10px;
+  margin-top: 12px;
+}

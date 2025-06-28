@@ -1,4 +1,9 @@
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  serverTimestamp,
+} from "firebase/firestore";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -28,7 +33,6 @@ export default function PostItem() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const { name, description, question, type, image } = form;
 
     if (!name || !description || !question || !type || !image) {
@@ -39,9 +43,11 @@ export default function PostItem() {
     try {
       setLoading(true);
 
+      // Upload image to Cloudinary
       const imageUrl = await uploadImageToCloudinary(image);
 
-      await addDoc(collection(db, "items"), {
+      // Add item to Firestore
+      const itemRef = await addDoc(collection(db, "items"), {
         itemName: name,
         description,
         question,
@@ -51,6 +57,28 @@ export default function PostItem() {
         userId: auth.currentUser.uid,
         userEmail: auth.currentUser.email,
       });
+
+      // Fetch all users and notify everyone except current user
+      const usersSnapshot = await getDocs(collection(db, "users"));
+      const batchPromises = [];
+
+      usersSnapshot.forEach((docSnap) => {
+        const user = docSnap.data();
+        if (user.uid !== auth.currentUser.uid) {
+          batchPromises.push(
+            addDoc(collection(db, "notifications"), {
+              userId: user.uid, // ✅ same field used in query
+              message: `${auth.currentUser.email} posted a new item: ${name}`,
+              itemId: itemRef.id,
+              itemType: type, // ✅ include for color coding
+              read: false,
+              timestamp: serverTimestamp(),
+            })
+          );
+        }
+      });
+
+      await Promise.all(batchPromises);
 
       toast.success("Item posted successfully 🎉");
       navigate("/dashboard");

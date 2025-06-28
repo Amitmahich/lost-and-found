@@ -1,0 +1,68 @@
+.notifications-container {
+  max-width: 700px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.notifications-container h2 {
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notifications-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notification-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.07);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s ease;
+  text-align: left;
+}
+
+.notification-card:hover {
+  transform: scale(1.01);
+  background-color: #f9f9f9;
+}
+
+/* 🔴 Lost Item Style */
+.notification-card.lost {
+  border-left: 6px solid #e74c3c;
+}
+
+/* 🟢 Found Item Style */
+.notification-card.found {
+  border-left: 6px solid #2ecc71;
+}
+
+/* 🟡 Type badge */
+.notification-card .badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background-color: #ddd;
+  color: #333;
+  border-radius: 0.5rem;
+  padding: 2px 8px;
+  margin-right: 10px;
+  text-transform: uppercase;
+}
+
+/* 🕒 Timestamp */
+.timestamp {
+  font-size: 0.8rem;
+  color: #777;
+}
