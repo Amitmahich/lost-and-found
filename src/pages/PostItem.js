@@ -1,10 +1,14 @@
 import {
   addDoc,
   collection,
+  doc,
   getDocs,
+  onSnapshot,
   serverTimestamp,
+  increment,
+  updateDoc,
 } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { auth, db } from "../firebase/config";
@@ -21,7 +25,33 @@ export default function PostItem() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [isUserBlocked, setIsUserBlocked] = useState(false);
+  const [userStatusLoading, setUserStatusLoading] = useState(true);
   const navigate = useNavigate();
+
+  // Check user's blocked status in real-time
+  useEffect(() => {
+    if (auth.currentUser) {
+      const userRef = doc(db, "users", auth.currentUser.uid);
+      const unsubscribe = onSnapshot(
+        userRef,
+        (docSnap) => {
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            setIsUserBlocked(userData.isBlocked);
+          }
+          setUserStatusLoading(false);
+        },
+        (error) => {
+          console.error("Error fetching user status:", error);
+          setUserStatusLoading(false);
+        }
+      );
+      return () => unsubscribe();
+    } else {
+      setUserStatusLoading(false);
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -43,10 +73,8 @@ export default function PostItem() {
     try {
       setLoading(true);
 
-      // Upload image to Cloudinary
       const imageUrl = await uploadImageToCloudinary(image);
 
-      // Add item to Firestore
       const itemRef = await addDoc(collection(db, "items"), {
         itemName: name,
         description,
@@ -56,40 +84,62 @@ export default function PostItem() {
         createdAt: serverTimestamp(),
         userId: auth.currentUser.uid,
         userEmail: auth.currentUser.email,
+        isBlocked: false,
+        reports: 0,
       });
 
-      // Fetch all users and notify everyone except current user
+      const userRef = doc(db, "users", auth.currentUser.uid);
+      await updateDoc(userRef, {
+        postCount: increment(1),
+      });
+
       const usersSnapshot = await getDocs(collection(db, "users"));
-      const batchPromises = [];
+      const notificationPromises = [];
 
       usersSnapshot.forEach((docSnap) => {
         const user = docSnap.data();
         if (user.uid !== auth.currentUser.uid) {
-          batchPromises.push(
+          notificationPromises.push(
             addDoc(collection(db, "notifications"), {
-              userId: user.uid, // ✅ same field used in query
+              userId: user.uid,
               message: `${auth.currentUser.email} posted a new item: ${name}`,
               itemId: itemRef.id,
-              itemType: type, // ✅ include for color coding
+              itemType: type,
               read: false,
-              timestamp: serverTimestamp(),
+              createdAt: serverTimestamp(),
             })
           );
         }
       });
 
-      await Promise.all(batchPromises);
+      await Promise.all(notificationPromises);
 
       toast.success("Item posted successfully 🎉");
       navigate("/dashboard");
     } catch (error) {
-      console.error(error);
+      console.error("Error posting item:", error);
       toast.error("Error posting item 😢");
     } finally {
       setLoading(false);
     }
   };
 
+  if (userStatusLoading) {
+    return <p>Checking user status...</p>;
+  }
+
+  // ✅ Agar user blocked hai toh sirf blocked message dikhega
+  if (isUserBlocked) {
+    return (
+      <div className="post-item-container">
+        <div className="blocked-message">
+          🚫 You have been blocked by the admin and cannot post new items.
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ Agar user blocked nahi hai, toh form dikhega
   return (
     <div className="post-item-container">
       <form className="post-item-form" onSubmit={handleSubmit}>
@@ -104,19 +154,32 @@ export default function PostItem() {
           required
         />
 
+        <label>
+          Item Description:
+          <small className="field-hint">
+            Describe where/how you lost/found the item, color, brand, etc.
+          </small>
+        </label>
         <textarea
           name="description"
-          placeholder="Item Description"
+          placeholder="E.g., Black wallet lost near library with ID and cards"
           value={form.description}
           onChange={handleChange}
           rows="3"
           required
         />
 
+        <label>
+          Security Question:
+          <small className="field-hint">
+            Ask a question only the real owner can answer. E.g., "What name was
+            on the ID?"
+          </small>
+        </label>
         <input
           type="text"
           name="question"
-          placeholder="Enter a question based on the item"
+          placeholder="E.g., What brand is the watch?"
           value={form.question}
           onChange={handleChange}
           required

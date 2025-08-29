@@ -1,0 +1,57 @@
+.all-users-page {
+  padding: 20px;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.users-table th,
+.users-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.users-table th {
+  background-color: #f4f4f4;
+}
+
+.users-table button {
+  margin: 2px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.users-table button:hover {
+  opacity: 0.8;
+}
+
+/* ✅ Button colors for Block/Unblock functionality */
+.users-table .block-btn,
+.user-card .block-btn {
+  background-color: #e57373;
+  color: white;
+  font-weight: bold;
+}
+
+.users-table .block-btn:hover,
+.user-card .block-btn:hover {
+  background-color: #c62828;
+}
+
+.users-table .unblock-btn,
+.user-card .unblock-btn {
+  background-color: #81c784;
+  color: white;
+  font-weight: bold;
+}
+
+.users-table .unblock-btn:hover,
+.user-card .unblock-btn:hover {
+  background-color: #388e3c;
+}

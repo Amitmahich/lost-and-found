@@ -29,10 +29,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: 0.3s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease;
   text-align: left;
+  cursor: pointer; /* ✅ clickable */
 }
 
+/* Hover effect */
 .notification-card:hover {
   transform: scale(1.01);
   background-color: #f9f9f9;
@@ -65,4 +67,14 @@
 .timestamp {
   font-size: 0.8rem;
   color: #777;
+}
+
+/* ✅ Unread notification highlight */
+.notification-card.unread {
+  background-color: rgba(255, 250, 200, 0.3);
+  font-weight: bold;
+}
+
+.notification-card.unread:hover {
+  background-color: rgba(255, 250, 200, 0.5);
 }

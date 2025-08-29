@@ -1,0 +1,51 @@
+.all-items-page {
+  padding: 20px;
+}
+
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.items-table th,
+.items-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.items-table th {
+  background-color: #f4f4f4;
+}
+
+.items-table img {
+  border-radius: 6px;
+}
+
+.items-table button {
+  margin: 2px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.items-table button:hover {
+  opacity: 0.8;
+}
+
+/* ✅ New style for the Delete button */
+.items-table .delete-btn,
+.item-card .delete-btn {
+  background-color: #ef5350; /* Red color */
+  color: white;
+  font-weight: bold;
+}
+.view-btn{
+  background: #c6d7ac;
+}
+.items-table .delete-btn:hover,
+.item-card .delete-btn:hover {
+  background-color: #d32f2f; /* Darker red on hover */
+}

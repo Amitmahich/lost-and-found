@@ -37,6 +37,21 @@ export default function MyListings() {
     fetchItems();
   }, []);
 
+  const ImageWithLoader = ({ src, alt }) => {
+    const [loaded, setLoaded] = useState(false);
+    return (
+      <div className="image-wrapper">
+        {!loaded && <div className="image-skeleton">Loading...</div>}
+        <img
+          src={src}
+          alt={alt}
+          onLoad={() => setLoaded(true)}
+          style={{ display: loaded ? "block" : "none" }}
+        />
+      </div>
+    );
+  };
+
   if (loading) return <p className="loader">Loading your listings...</p>;
 
   return (
@@ -52,7 +67,7 @@ export default function MyListings() {
               key={item.id}
               onClick={() => navigate(`/dashboard/item/${item.id}`)}
             >
-              <img src={item.imageUrl} alt={item.itemName} />
+              <ImageWithLoader src={item.imageUrl} alt={item.itemName} />
               <div className="listing-info">
                 <h3>{item.itemName}</h3>
                 <p>

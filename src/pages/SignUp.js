@@ -1,9 +1,12 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { auth, db } from "../firebase/config"; // adjust path
+import { auth, db } from "../firebase/config";
 import "../styles/Auth.css";
 
 export default function SignUp() {
@@ -15,9 +18,11 @@ export default function SignUp() {
     password: "",
     confirmPassword: "",
   });
-  const navigate = useNavigate();
 
-  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -27,69 +32,72 @@ export default function SignUp() {
   };
 
   const validate = () => {
-    let err = {};
+    const errors = [];
 
-    if (!formData.firstName.trim()) err.firstName = "First name is required";
-    if (!formData.lastName.trim()) err.lastName = "Last name is required";
+    if (!formData.firstName.trim()) errors.push("First name is required");
+    if (!formData.lastName.trim()) errors.push("Last name is required");
+    if (!formData.email) errors.push("Email is required");
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+      errors.push("Invalid email address");
+    if (!formData.mobile) errors.push("Mobile number is required");
+    else if (!/^\d{10}$/.test(formData.mobile))
+      errors.push("Mobile number must be 10 digits");
+    if (!formData.password) errors.push("Password is required");
+    else if (formData.password.length < 6)
+      errors.push("Password must be at least 6 characters");
+    if (!formData.confirmPassword) errors.push("Please confirm your password");
+    else if (formData.password !== formData.confirmPassword)
+      errors.push("Passwords do not match");
 
-    if (!formData.email) {
-      err.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      err.email = "Invalid email address";
+    if (errors.length > 0) {
+      toast.error(errors[0]); // show first error
+      return false;
     }
 
-    if (!formData.mobile) {
-      err.mobile = "Mobile number is required";
-    } else if (!/^\d{10}$/.test(formData.mobile)) {
-      err.mobile = "Mobile number must be 10 digits";
-    }
-
-    if (!formData.password) {
-      err.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      err.password = "Password must be at least 6 characters";
-    }
-
-    if (!formData.confirmPassword) {
-      err.confirmPassword = "Confirm your password";
-    } else if (formData.password !== formData.confirmPassword) {
-      err.confirmPassword = "Passwords do not match";
-    }
-
-    setErrors(err);
-    return Object.keys(err).length === 0;
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validate()) return;
 
-    if (validate()) {
-      try {
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          formData.email,
-          formData.password
-        );
+    setLoading(true);
 
-        const user = userCredential.user;
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
 
-        // Save to Firestore
-        await setDoc(doc(db, "users", user.uid), {
-          uid: user.uid,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          mobile: formData.mobile,
-          createdAt: new Date(),
-        });
+      const user = userCredential.user;
 
-        toast.success("Account created successfully 🎉");
-        navigate("/signin");
-      } catch (error) {
-        toast.error(error.message);
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        mobile: formData.mobile,
+        createdAt: new Date(),
+        isAdmin: false, // This is already present (default: normal user)
+        isBlocked: false, // ✅ This is the new field added
+        postCount: 0,
+      });
+
+      await sendEmailVerification(user);
+      toast.success(
+        "Account created! Please verify your email 📧. " +
+          "Check your inbox or spam folder if you don't see it."
+      );
+      navigate("/signin");
+    } catch (error) {
+      if (error.code === "auth/email-already-in-use") {
+        toast.error("Email already exists. Try signing in.");
+      } else {
+        toast.error(error.message || "Something went wrong");
       }
-    } else {
-      toast.error("Please fix form errors");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -106,8 +114,6 @@ export default function SignUp() {
             value={formData.firstName}
             onChange={handleChange}
           />
-          {errors.firstName && <p className="error">{errors.firstName}</p>}
-
           <input
             type="text"
             placeholder="Last Name"
@@ -115,8 +121,6 @@ export default function SignUp() {
             value={formData.lastName}
             onChange={handleChange}
           />
-          {errors.lastName && <p className="error">{errors.lastName}</p>}
-
           <input
             type="email"
             placeholder="Email Address"
@@ -124,8 +128,6 @@ export default function SignUp() {
             value={formData.email}
             onChange={handleChange}
           />
-          {errors.email && <p className="error">{errors.email}</p>}
-
           <input
             type="tel"
             placeholder="Mobile Number"
@@ -133,30 +135,44 @@ export default function SignUp() {
             value={formData.mobile}
             onChange={handleChange}
           />
-          {errors.mobile && <p className="error">{errors.mobile}</p>}
 
-          <input
-            type="password"
-            placeholder="Password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          {errors.password && <p className="error">{errors.password}</p>}
+          <div className="password-input-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+            <button
+              type="button"
+              className="show-password-btn"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
 
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-          />
-          {errors.confirmPassword && (
-            <p className="error">{errors.confirmPassword}</p>
-          )}
+          <div className="password-input-container">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm Password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+            />
+            <button
+              type="button"
+              className="show-password-btn"
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+            >
+              {showConfirmPassword ? "Hide" : "Show"}
+            </button>
+          </div>
 
-          <button type="submit">Sign Up</button>
-
+          <button type="submit" disabled={loading}>
+            {loading ? "Creating Account..." : "Sign Up"}
+          </button>
           <p className="switch-auth">
             Already have an account? <Link to="/signin">Sign In</Link>
           </p>

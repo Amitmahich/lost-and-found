@@ -7,8 +7,8 @@ import "../styles/Auth.css";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const navigate = useNavigate(); // ⬅️ for redirect
+  const [loading, setLoading] = useState(false); // ✅ New
+  const navigate = useNavigate();
 
   const validate = () => {
     if (!email) return "Email is required";
@@ -18,19 +18,31 @@ export default function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const err = validate();
-    if (err) {
-      setError(err);
-      toast.error("Please enter a valid email");
-    } else {
-      try {
-        await sendPasswordResetEmail(auth, email);
-        toast.success("Reset email sent 📩");
-        setTimeout(() => navigate("/signin"), 2000); // ⬅️ Redirect after 2 sec
-      } catch (error) {
-        console.error("Reset error:", error.message);
-        toast.error("Email not found or invalid ❌");
+
+    const error = validate();
+    if (error) {
+      toast.error(error);
+      return;
+    }
+
+    setLoading(true); // ✅ Start loading
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast.success("Reset email sent 📩");
+      setTimeout(() => navigate("/signin"), 2000);
+    } catch (err) {
+      console.error("Reset error:", err.code);
+
+      if (err.code === "auth/user-not-found") {
+        toast.error("No account found with this email ❌");
+      } else if (err.code === "auth/invalid-email") {
+        toast.error("Invalid email format ❌");
+      } else {
+        toast.error("Failed to send reset email ❌");
       }
+    } finally {
+      setLoading(false); // ✅ Stop loading
     }
   };
 
@@ -44,14 +56,12 @@ export default function ForgotPassword() {
             type="email"
             placeholder="Email address"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setError("");
-            }}
+            onChange={(e) => setEmail(e.target.value)}
           />
-          {error && <p className="error">{error}</p>}
 
-          <button type="submit">Reset Password</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Sending Reset Email..." : "Reset Password"}
+          </button>
         </form>
       </div>
     </div>

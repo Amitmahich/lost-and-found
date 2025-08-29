@@ -1,4 +1,3 @@
-// src/pages/ItemDetail.js
 import {
   addDoc,
   collection,
@@ -6,6 +5,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -112,6 +112,15 @@ export default function ItemDetail() {
       setResponseStatus("Pending");
       setHasResponded(true);
 
+      // ✅ Send notification to item owner
+      await addDoc(collection(db, "notifications"), {
+        userId: item.userId,
+        message: `${auth.currentUser?.email} responded to your item "${item.itemName}"`,
+        itemType: item.itemType,
+        read: false,
+        createdAt: serverTimestamp(), // ✅ Correct timestamp
+      });
+
       toast.success("Answer submitted successfully ✅");
       setShowAnswerModal(false);
       setAnswer("");
@@ -201,8 +210,14 @@ export default function ItemDetail() {
             ) : hasResponded ? (
               <p className="response-info">
                 You have already submitted your response for this item. The
-                owner will review it soon in the <strong>Responses</strong>{" "}
-                section.
+                owner will review it soon. Please check the{" "}
+                <span
+                  className="clickable-link"
+                  onClick={() => navigate("/dashboard/responses")}
+                >
+                  responses page
+                </span>{" "}
+                for updates.
               </p>
             ) : (
               <button

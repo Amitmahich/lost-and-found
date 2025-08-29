@@ -1,0 +1,154 @@
+/* ✅ Modal Overlay */
+.reports-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 10px;
+}
+
+/* ✅ Modal Box */
+.modal-content {
+  background: #fff;
+  width: 95%;
+  max-width: 700px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: fadeIn 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+/* ✅ Header */
+.modal-header {
+  background: #007bff;
+  color: #fff;
+  padding: 15px 20px;
+  font-weight: bold;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ Body */
+.modal-body {
+  padding: 15px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ✅ Close Button at bottom */
+.modal-footer {
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  background: #f8f9fa;
+}
+
+.close-btn {
+  background: #ff4d4f;
+  border: none;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.close-btn:hover {
+  background: #e03a3c;
+}
+
+/* ✅ Table Styling */
+.reports-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.reports-table th,
+.reports-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+  font-size: 14px;
+  word-break: break-word; /* long email wrap hoga */
+  white-space: normal;
+}
+
+.reports-table th {
+  background: #f5f5f5;
+  font-weight: 600;
+  color: #007bff;
+}
+
+.reports-table tr:hover {
+  background: #f9f9f9;
+}
+
+/* ✅ Responsive - Mobile View */
+@media (max-width: 600px) {
+  .reports-table,
+  .reports-table thead,
+  .reports-table tbody,
+  .reports-table th,
+  .reports-table td,
+  .reports-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .reports-table thead {
+    display: none;
+  }
+
+  .reports-table tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+
+  .reports-table td {
+    border: none;
+    padding: 8px 10px;
+    position: relative;
+    font-size: 14px;
+    text-align: left;
+  }
+
+  .reports-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #007bff;
+    display: block;
+    margin-bottom: 3px;
+  }
+}
+.report-count {
+  font-size: 14px;
+  font-weight: normal;
+  color: #f1f1f1;
+}
+
+/* ✅ Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

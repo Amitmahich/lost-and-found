@@ -1,0 +1,121 @@
+/* Base styles - Hide mobile view by default */
+.mobile-item-list,
+.mobile-user-list {
+  display: none;
+}
+
+/* Base styles */
+.all-items-page,
+.all-users-page {
+  padding: 20px;
+}
+
+.items-table,
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.items-table th,
+.items-table td,
+.users-table th,
+.users-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.items-table th,
+.users-table th {
+  background-color: #f4f4f4;
+}
+
+.items-table img,
+.users-table img {
+  border-radius: 6px;
+}
+
+.items-table button,
+.users-table button {
+  margin: 2px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.items-table button:hover,
+.users-table button:hover {
+  opacity: 0.8;
+}
+
+/* ---------------------------------------------------- */
+/* Responsive styles for smaller screens      */
+/* ---------------------------------------------------- */
+
+@media (max-width: 768px) {
+  /* Hides the desktop table on smaller screens */
+  .items-table,
+  .users-table {
+    display: none;
+  }
+
+  /* Shows the mobile card layout on smaller screens */
+  .mobile-item-list,
+  .mobile-user-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  /* Styles for each individual card on mobile */
+  .item-card,
+  .user-card {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .item-card > div,
+  .user-card > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+  }
+
+  .item-card .label,
+  .user-card .label {
+    font-weight: bold;
+    color: #555;
+    text-align: left;
+    flex-basis: 40%;
+  }
+
+  .item-card .value,
+  .user-card .value {
+    text-align: right;
+    flex-basis: 60%;
+  }
+
+  .item-card .actions,
+  .user-card .actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    gap: 10px;
+  }
+
+  .item-card button,
+  .user-card button {
+    width: 100%;
+  }
+
+  .item-card img,
+  .user-card img {
+    max-width: 80px;
+    height: auto;
+  }
+}
