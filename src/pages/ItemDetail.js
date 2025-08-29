@@ -200,7 +200,9 @@ export default function ItemDetail() {
               </>
             ) : hasResponded ? (
               <p className="response-info">
-                Sorry, you have already submitted your response.
+                You have already submitted your response for this item. The
+                owner will review it soon in the <strong>Responses</strong>{" "}
+                section.
               </p>
             ) : (
               <button
